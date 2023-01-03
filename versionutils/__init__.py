@@ -3,15 +3,23 @@ import time
 
 import schedule
 import urllib.request
+from urllib.error import HTTPError
 
 CURRENT_VERSION = {}
 CURRENT_MANIFEST = ""
 LAST_MANIFEST = ""
-URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json"
+WOB_URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json"
+KA_URL = "http://51.178.18.16:8000/api/v1/manifests"
 
 
 def get_versions():
-    response = urllib.request.urlopen(URL)
+    response = urllib.request.urlopen(WOB_URL)
+    versions_raw = response.read().decode("utf-8")
+    return json.loads(versions_raw)
+
+
+def get_manifests(version=""):
+    response = urllib.request.urlopen(KA_URL + ("" if version == "" else "?version=" + version))
     versions_raw = response.read().decode("utf-8")
     return json.loads(versions_raw)
 
@@ -63,9 +71,8 @@ def __check_manifests():
         print("[INFO] No new manifest")
 
 
-def __main():
-    print("[INFO] ManifestChecker started\n")
-
+def __start_manifest_check():
+    print("\n[INFO] New manifest checker started")
     schedule.every(5).seconds.do(__check_manifests)
     __check_manifests()
 
@@ -78,6 +85,38 @@ def __main():
             print(" - Manifest:", CURRENT_VERSION["manifest"])
             print(" - Client version:", CURRENT_VERSION["client_version"])
             found_new = True
+
+
+def __start_manifest_query():
+    do_query = True
+    while do_query:
+        select_manifest = input("\n[INPUT] Select a version to query manifests for: ")
+        while select_manifest == "":
+            select_manifest = input("[INPUT] No version selected, select one to query manifests: ")
+        try:
+            manifests = get_manifests(select_manifest)
+            print(f"[INFO]  {len(manifests)} manifest{'' if len(manifests) == 1 else 's'} found: "
+                  f"'" + "', '".join(manifests) + "'")
+        except HTTPError:
+            print(f"[INFO]  No manifests found for version '{select_manifest}'")
+        should_query = input("[INPUT] Do another query? (y/n) ")
+        do_query = should_query.lower() == "y"
+
+
+def __main():
+    valid_selections = ["1", "2"]
+    selection_to_function = {
+        "1": __start_manifest_check,
+        "2": __start_manifest_query
+    }
+
+    print("[INPUT] Started VersionUtils")
+    print("        1. Check for new manifest")
+    print("        2. Query manifests for specific game version")
+    select = input("        Select an option: ")
+    while select not in valid_selections:
+        select = input("        Invalid input, select an option: ")
+    selection_to_function[select]()
 
 
 if __name__ == "__main__":
