@@ -6,31 +6,58 @@ be it from the game's executable or from [WhiteOwlBot's (WOB) public data](https
 #### Installation
 
 `pip install git+https://github.com/NotToDisturb/VersionUtils.git#egg=VersionUtils`
-
+<br><br>
 #### Documentation
-There are 5 methods available for use:
->`get_versions()`<br />
-> Returns a dictionary with the contents of [WOB's public data](https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json)
+- [`get_versions`](#get_versions---list)
+- [`get_processed_versions`](#get_processed_versions---list)
+- [`get_latest_version`](#get_latest_version---dict)
+- [`get_manifests`](#get_manifestsversion-str--)
+- [`get_game_version`](#get_game_versiongame_path-str---str)
 
->`get_processed_versions()`<br />
-> Returns a dictionary with the processed contents of WOB's public data, sorted in descending order by release timestamp
+<br>
 
->`get_latest_version()`<br />
-> Returns a dictionary with the processed contents of the latest version in WOB's public data
+> ##### `get_versions() -> list`
+> 
+> Returns a `list` of `dict`s with the contents of [WOB's public data](https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json)
 
-> `get_manifests(version: str = "")`<br />
-> Returns a dictionary with all the manifests for the specified version, 
-> or a dictionary with all the manifests grouped by version if no version is specified.
+<br>
+
+> ##### `get_processed_versions() -> list`
+> 
+> Returns a `list` of `dict`s with the processed contents of WOB's public data, sorted in descending order by release timestamp
+
+<br>
+
+> ##### `get_latest_version() -> dict`
+> 
+> Returns a `dict` with the processed contents of the latest version in WOB's public data
+
+<br>
+
+> ##### `get_manifests(version: str = "")`
+> 
+> Returns a `list` with all the manifests for the specified version, 
+> or a `dict` with all the manifests grouped by version if no version is specified.
 > Based on [CheckValor's data](https://twitter.com/CheckValor).
 
-> `get_game_version(game_path: str)`<br />
-> Returns a string containing the version present in the executable
+<br>
+
+> ##### `get_game_version(game_path: str) -> str`
+> 
+> Returns a `str` containing the version present in the executable
+
+<br>
 
 The processed data for each version has the following attributes:
-- `manifest`: a hexadecimal string that identifies a patch
-- `version_number`: numeric representation of the patch version
-- `client_version`: similar to `version_number`, but useful to distinguish between regular and PBE patches
-- `release_timestamp`: an integer that represent the release time of the patch in milliseconds
+
+|**Attribute**      |Type |**Description**|
+|-------------------|-----|---------------|
+|`manifest`         |`str`|A hexadecimal string that identifies a patch|
+|`version_number`   |`str`|Numeric representation of the patch version|
+|`client_version`   |`str`|Similar to `version_number`, but useful to distinguish between regular and PBE patches|
+|`release_timestamp`|`int`|An integer that represent the release time of the patch in milliseconds|
+
+<br>
 
 #### Example usage
 Here is an example of how to use VersionUtils:
@@ -54,13 +81,14 @@ It is also possible to use this script as a standalone script using these steps
 - Execute the following command: `python <path to file>`
 
 Once executed, you will be faced with two options
-> `Check for new manifests`<br />
+> `Check for new manifests`<br>
 >Polls WOB's data every 5 seconds and notifies whether or not a new manifest is available
-  
 
-> `Query manifests for specific game version`<br />
+<br>
+
+> `Query manifests for specific game version`<br>
 >After inputting a version, the manifests available in CheckValor's data are displayed
 
 ## Credits
-floxay [Go](https://github.com/floxay) <br />
+floxay [Go](https://github.com/floxay) <br>
 Shiick [Go](https://github.com/Shiick)

@@ -12,7 +12,7 @@ WOB_URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/ma
 KA_URL = "http://51.178.18.16:8000/api/v1/manifests"
 
 
-def get_versions():
+def get_versions() -> list:
     response = urllib.request.urlopen(WOB_URL)
     versions_raw = response.read().decode("utf-8")
     return json.loads(versions_raw)
@@ -24,7 +24,7 @@ def get_manifests(version: str = ""):
     return json.loads(versions_raw)
 
 
-def __process_version(version: dict):
+def __process_version(version: dict) -> dict:
     return {
         "manifest": version["id"],
         "version_number": version["build_info"]["version"],
@@ -33,17 +33,17 @@ def __process_version(version: dict):
     }
 
 
-def get_processed_versions():
+def get_processed_versions() -> list:
     versions = get_versions()
     extracted_versions = [__process_version(version) for version in versions]
     return sorted(extracted_versions, key=lambda v: v["release_timestamp"], reverse=True)
 
 
-def get_latest_version():
+def get_latest_version() -> dict:
     return __process_version(get_versions()[-1])
 
 
-def get_game_version(game_path: str):
+def get_game_version(game_path: str) -> str:
     # Get the version of the game from which the Locres is being extracted
     # Read the executable as bytes
     with open(game_path, 'rb') as game_file:
