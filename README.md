@@ -64,7 +64,7 @@ Here is an example of how to use VersionUtils:
 ```
 from versionutils import get_latest_version, get_game_version
 
-GAME_PATH = "C:\Riot Games\VALORANT\live\ShooterGame\Binaries\Win64\VALORANT-Win64-Shipping.exe"
+GAME_PATH = "C:\\Riot Games\\VALORANT\\live\\ShooterGame\\Binaries\\Win64\\VALORANT-Win64-Shipping.exe"
 
 print(get_latest_version()["client_version"])
 print(get_manifests("5.12"))
