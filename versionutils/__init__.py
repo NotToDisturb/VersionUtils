@@ -18,7 +18,7 @@ def get_versions():
     return json.loads(versions_raw)
 
 
-def get_manifests(version=""):
+def get_manifests(version: str = ""):
     response = urllib.request.urlopen(KA_URL + ("" if version == "" else "?version=" + version))
     versions_raw = response.read().decode("utf-8")
     return json.loads(versions_raw)
