@@ -2,7 +2,7 @@
 VersionUtils is Python 3.8 script that allows the user to obtain information regarding VALORANT game versions, 
 be it from the game's executable or from [WhiteOwlBot's (WOB) public data](https://github.com/WhiteOwlBot/WhiteOwl-public-data).
 
-### Package usage
+## Package usage
 #### Installation
 
 `pip install VersionUtils`
@@ -32,7 +32,7 @@ The processed data for each version has the following attributes:
 - `client_version`: similar to `version_number`, but useful to distinguish between regular and PBE patches
 - `release_timestamp`: an integer that represent the release time of the patch in milliseconds
 
-## Example usage
+#### Example usage
 Here is an example of how to use VersionUtils:
 ```
 from versionutils import get_latest_version, get_game_version
@@ -45,7 +45,7 @@ print(get_game_version())
 ```
 *Note: Replace `GAME_PATH` with the folder you installed VALORANT to*
 
-### Standalone usage
+## Standalone usage
 It is also possible to use this script as a standalone script using these steps
 
 - Have a Python installation with the following packages: `schedule`
