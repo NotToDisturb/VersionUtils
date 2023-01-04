@@ -4,7 +4,6 @@ be it from the game's executable or from [WhiteOwlBot's (WOB) public data](https
 
 ### Package usage
 #### Installation
-To install this package, run the following command:
 
 `pip install VersionUtils`
 
