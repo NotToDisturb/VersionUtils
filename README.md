@@ -5,7 +5,7 @@ be it from the game's executable or from [WhiteOwlBot's (WOB) public data](https
 ## Package usage
 #### Installation
 
-`pip install VersionUtils`
+`pip install git+https://github.com/NotToDisturb/VersionUtils.git#egg=VersionUtils`
 
 #### Documentation
 There are 5 methods available for use:
