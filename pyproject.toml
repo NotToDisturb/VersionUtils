@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.urls]
-"GitHub" = "https://github.com/NotToDisturb/nVersionUtils"
+"GitHub" = "https://github.com/NotToDisturb/VersionUtils"
 
 [tool.setuptools]
 packages = ["versionutils"]
