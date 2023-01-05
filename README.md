@@ -75,7 +75,7 @@ print(get_game_version())
 ## Standalone usage
 It is also possible to use VersionUtils as a standalone script:
 
-1. Downloaded the [latest release](https://github.com/NotToDisturb/VersionUtils/releases/latest)
+1. Download the [latest release](https://github.com/NotToDisturb/VersionUtils/releases/latest)
 1. Extract the zip file
 1. Open a console inside the extracted folder
 1. Install the required packages using `pip install -r requirements.txt`
