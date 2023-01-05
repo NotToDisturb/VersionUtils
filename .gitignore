@@ -2,3 +2,5 @@
 /VersionUtils.egg-info/
 /dist/
 *.iml
+/standalone/build/
+/standalone/out/

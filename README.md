@@ -73,12 +73,13 @@ print(get_game_version())
 *Note: Replace `GAME_PATH` with the folder you installed VALORANT to*
 
 ## Standalone usage
-It is also possible to use this script as a standalone script using these steps
+It is also possible to use VersionUtils as a standalone script:
 
-- Have a Python installation with the following packages: `schedule`
-- Download `versionutils\__init__.py` by clicking [here](https://raw.githubusercontent.com/NotToDisturb/VersionUtils/master/versionutils/__init__.py)
-- Move and rename the downloaded file to your liking
-- Execute the following command: `python <path to file>`
+1. Downloaded the [latest release](https://github.com/NotToDisturb/VersionUtils/releases/latest)
+1. Extract the zip file
+1. Open a console inside the extracted folder
+1. Install the required packages using `pip install -r requirements.txt`
+1. Run the script using `python versionutils.py`
 
 Once executed, you will be faced with two options
 > `Check for new manifests`<br>
