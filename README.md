@@ -53,8 +53,8 @@ The processed data for each version has the following attributes:
 |**Attribute**      |Type |**Description**|
 |-------------------|-----|---------------|
 |`manifest`         |`str`|A hexadecimal string that identifies a patch|
-|`version_number`   |`str`|Numeric representation of the patch version|
-|`client_version`   |`str`|Similar to `version_number`, but useful to distinguish between regular and PBE patches|
+|`branch`           |`str`|Either `release` or `pbe`|
+|`version`          |`str`|The client version visible in-game|
 |`release_timestamp`|`int`|An integer that represent the release time of the patch in milliseconds|
 
 <br>

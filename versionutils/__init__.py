@@ -24,11 +24,15 @@ def get_manifests(version: str = ""):
     return json.loads(versions_raw)
 
 
+def __clean_version_branch(branch: str):
+    return branch if branch == "pbe" else branch.split("-")[0]
+
+
 def __process_version(version: dict) -> dict:
     return {
         "manifest": version["id"],
-        "version_number": version["build_info"]["version"],
-        "client_version": version["build_info"]["client_version"],
+        "branch": __clean_version_branch(version["build_info"]["branch"]),
+        "version": version["build_info"]["version"],
         "release_timestamp": version["release_timestamp"]
     }
 
@@ -52,8 +56,7 @@ def get_game_version(game_path: str) -> str:
         # Transform bytes into a readable list of strings
         client_ver_list = list(filter(None, bytes.fromhex(client_ver_hex).decode('utf-16-le').split('\x00')))
         # Compose the version string
-        return client_ver_list[0] + '-' + client_ver_list[2] + '-' + \
-               client_ver_list[3].rsplit('.')[-1].lstrip('0')
+        return __clean_version_branch(client_ver_list[3]) + "-" + client_ver_list[3]
 
 
 def __check_manifests():
