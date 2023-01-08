@@ -44,7 +44,7 @@ be it from the game's executable or from [WhiteOwlBot's (WOB) public data](https
 
 > ##### `get_game_version(game_path: str) -> str`
 > 
-> Returns a `str` containing the version present in the executable
+> Returns a `dict` containing version data present in the game's executable
 
 <br>
 
@@ -56,6 +56,14 @@ The processed data for each version has the following attributes:
 |`branch`           |`str`|Either `release` or `pbe`|
 |`version`          |`str`|The client version visible in-game|
 |`release_timestamp`|`int`|An integer that represent the release time of the patch in milliseconds|
+
+Similarly, the game version data has the following attributes:
+
+|**Attribute**|Type |**Description**|
+|-------------------|-----|---------------|
+|`branch`     |`str`|Either `release` or `pbe`|
+|`version`    |`str`|The client version visible in-game|
+|`date`       |`int`|A date in `MM/DD/YYYY` format|
 
 <br>
 
