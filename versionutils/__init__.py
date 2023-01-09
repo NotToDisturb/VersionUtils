@@ -1,15 +1,18 @@
 import json
 import time
-
 import schedule
-import urllib.request
+
 from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+from fake_useragent import UserAgent
 
 CURRENT_VERSION = {}
 CURRENT_MANIFEST = ""
 LAST_MANIFEST = ""
+
 WOB_URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json"
 KA_URL = "http://51.178.18.16:8000/api/v1/manifests"
+RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespace=keystone.products.valorant.patchlines"
 
 # Key is the version in which the Unreal Engine version started to be used
 UE_VERSIONS = {
@@ -37,15 +40,23 @@ UE_VERSIONS = {
 
 
 def get_versions() -> list:
-    response = urllib.request.urlopen(WOB_URL)
+    response = urlopen(WOB_URL)
     versions_raw = response.read().decode("utf-8")
     return json.loads(versions_raw)
 
 
 def get_manifests(version: str = ""):
-    response = urllib.request.urlopen(KA_URL + ("" if version == "" else "?version=" + version))
-    versions_raw = response.read().decode("utf-8")
-    return json.loads(versions_raw)
+    response = urlopen(KA_URL + ("" if version == "" else "?version=" + version))
+    manifests = response.read().decode("utf-8")
+    return json.loads(manifests)
+
+
+def get_valorant_live():
+    request = Request(RIOT_URL)
+    request.add_header("User-Agent", UserAgent().random)
+    response = urlopen(request)
+    live_configs = response.read().decode("utf-8")
+    return json.loads(live_configs)["keystone.products.valorant.patchlines.live"]
 
 
 def __clean_version_branch(branch: str):
@@ -69,6 +80,13 @@ def get_processed_versions() -> list:
 
 def get_latest_version() -> dict:
     return __process_version(get_versions()[-1])
+
+
+def get_latest_manifest() -> str:
+    live_configs = get_valorant_live()
+    for config in live_configs["platforms"]["win"]["configurations"]:
+        if config["id"] == "na":
+            return config["patch_url"]
 
 
 def get_game_version(game_path: str) -> dict:
@@ -152,6 +170,8 @@ def __start_manifest_query():
 
 
 def __main():
+    print(get_latest_manifest())
+
     valid_selections = ["1", "2"]
     selection_to_function = {
         "1": __start_manifest_check,
