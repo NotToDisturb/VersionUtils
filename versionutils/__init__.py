@@ -11,6 +11,30 @@ LAST_MANIFEST = ""
 WOB_URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json"
 KA_URL = "http://51.178.18.16:8000/api/v1/manifests"
 
+# Key is the version in which the Unreal Engine version started to be used
+UE_VERSIONS = {
+    "5.03": {
+        "unreal_engine": "4.26",
+        "umodel": "valorant"
+    },
+    "2.11": {
+        "unreal_engine": "4.25",
+        "umodel": "ue4.25"
+    },
+    "2.0": {
+        "unreal_engine": "4.24",
+        "umodel": "ue4.24"
+    },
+    "0.49": {
+        "unreal_engine": "4.23",
+        "umodel": "ue4.23"
+    },
+    "0": {
+        "unreal_engine": "4.22",
+        "umodel": "ue4.22"
+    },
+}
+
 
 def get_versions() -> list:
     response = urllib.request.urlopen(WOB_URL)
@@ -59,8 +83,25 @@ def get_game_version(game_path: str) -> dict:
         return {
             "branch": __clean_version_branch(client_ver_list[0]),
             "version": client_ver_list[3],
-            "date": client_ver_list[2]
+            "date": client_ver_list[1]
         }
+
+
+def is_version_newer(version_a: str, version_b: str):
+    split_version_a = version_a.split(".")
+    split_version_b = version_b.split(".")
+    for i in range(min(len(split_version_a), len(split_version_b))):
+        if int(split_version_a[i]) > int(split_version_b[i]):
+            return True
+        if int(split_version_a[i]) < int(split_version_b[i]):
+            return False
+    return len(split_version_a) >= len(split_version_b)
+
+
+def get_ue_version(version: str):
+    for check_version, ue_version in UE_VERSIONS.items():
+        if is_version_newer(version, check_version):
+            return ue_version
 
 
 def __check_manifests():
@@ -111,10 +152,6 @@ def __start_manifest_query():
 
 
 def __main():
-    val = "D:\\Games\\Riot Games\\VALORANT\\live\\ShooterGame\\Binaries\\Win64\\VALORANT-Win64-Shipping.exe"
-    get_game_version(val)
-
-
     valid_selections = ["1", "2"]
     selection_to_function = {
         "1": __start_manifest_check,
