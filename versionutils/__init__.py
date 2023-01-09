@@ -5,7 +5,6 @@ import schedule
 from urllib.request import Request, urlopen
 from fake_useragent import UserAgent
 
-CURRENT_VERSION = {}
 CURRENT_MANIFEST = ""
 LAST_MANIFEST = ""
 
@@ -68,6 +67,7 @@ def __process_version(version: dict) -> dict:
         "branch": __clean_version_branch(version["build_info"]["branch"]),
         "version": version["build_info"]["version"],
         "date": version["build_info"]["build_date"],
+        "upload_timestamp": version["upload_timestamp"],
         "release_timestamp": version["release_timestamp"]
     }
 
@@ -75,7 +75,11 @@ def __process_version(version: dict) -> dict:
 def get_processed_wob_versions() -> list:
     versions = get_wob_versions()
     processed_versions = [__process_version(version) for version in versions]
-    return sorted(processed_versions, key=lambda v: v["release_timestamp"], reverse=True)
+    return sorted(
+        processed_versions,
+        key=lambda v: v["upload_timestamp"] if v["release_timestamp"] == 0 else v["release_timestamp"],
+        reverse=True
+    )
 
 
 def get_versions() -> list:
@@ -86,7 +90,11 @@ def get_versions() -> list:
         if wob_version["manifest"] == va_versions[0]["manifest"]:
             break
         va_versions.append(wob_version)
-    return sorted(va_versions, key=lambda v: v["release_timestamp"], reverse=True)
+    return sorted(
+        va_versions,
+        key=lambda v: v["upload_timestamp"] if v["release_timestamp"] == 0 else v["release_timestamp"],
+        reverse=True
+    )
 
 
 def get_latest_version() -> dict:
@@ -99,10 +107,21 @@ def get_manifests(version: str = "", branch: str = "") -> list:
 
 
 def get_latest_manifest() -> str:
+    """
+    While this implementation does get the latest `live` manifest,
+    it does not account for PBE manifests, so fallback on WOB data.
+
+    TODO: Get PBE data (need a PBE account for that lmao)
+
     live_configs = get_live_configs()
     for config in live_configs["platforms"]["win"]["configurations"]:
         if config["id"] == "na":
-            return config["patch_url"]
+            return config["patch_url"]"""
+    return get_latest_version()["manifest"]
+
+
+def extract_manifest_id(manifest_url: str):
+    return manifest_url.split(".manifest")[0].split("/")[-1]
 
 
 def get_game_version(game_path: str) -> dict:
@@ -138,21 +157,20 @@ def is_version_newer(version_a: str, version_b: str):
 
 
 def __check_manifests():
-    global CURRENT_VERSION, CURRENT_MANIFEST, LAST_MANIFEST
+    global CURRENT_MANIFEST, LAST_MANIFEST
 
-    versions = get_processed_wob_versions()
-    check_manifest = versions[0]["manifest"]
+    check_manifest = get_latest_manifest()
     if check_manifest != CURRENT_MANIFEST:
         LAST_MANIFEST = CURRENT_MANIFEST
         CURRENT_MANIFEST = check_manifest
-        CURRENT_VERSION = versions[0]
-        info_message = "Manifest initialized:" if LAST_MANIFEST == "" else "Manifest updated"
+        info_message = "Manifest initialized:" if LAST_MANIFEST == "" else "NEW MANIFEST FOUND: "
         print("[INFO]", info_message, check_manifest)
     else:
         print("[INFO] No new manifest")
 
 
 def __start_manifest_check():
+    global CURRENT_MANIFEST, LAST_MANIFEST
     print("\n==== MANIFEST CHECKER ====")
     schedule.every(5).seconds.do(__check_manifests)
     __check_manifests()
@@ -161,10 +179,7 @@ def __start_manifest_check():
     while not found_new:
         schedule.run_pending()
         time.sleep(1)
-        if CURRENT_MANIFEST != "" and LAST_MANIFEST != "":
-            print("\n[INFO] NEW MANIFEST FOUND")
-            print(" - Manifest:", CURRENT_VERSION["manifest"])
-            print(" - Client version:", CURRENT_VERSION["client_version"])
+        if CURRENT_MANIFEST != "" and LAST_MANIFEST != "" and CURRENT_MANIFEST != LAST_MANIFEST:
             found_new = True
 
 

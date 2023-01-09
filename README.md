@@ -101,8 +101,8 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 |**Attribute**              |Type |**Description**|
 |---------------------------|-----|---------------|
 |`id`                       |`str`|A hexadecimal string that identifies a patch|
-|`upload_timestamp`         |`int`|An integer that represent the upload time of the patch in milliseconds|
-|`release_timestamp`        |`int`|An integer that represent the release time of the patch in milliseconds|
+|`upload_timestamp`         |`int`|UNIX timestamp representing when Riot uploaded the version to their CDN|
+|`release_timestamp`        |`int`|UNIX timestamp representing when the version became available to players|
 |`build_info.branch`        |`str`|Either `release-X.YY` or `pbe`, where `X.YY` is an umbrella version number|
 |`build_info.version`       |`str`|The client version visible in-game|
 |`build_info.build_version` |`int`|Unclear what this represents|
@@ -116,7 +116,8 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 |`branch`           |`str`|Either `release` or `pbe`|
 |`version`          |`str`|The client version visible in-game|
 |`date`             |`int`|The date of the build|
-|`release_timestamp`|`int`|An integer that represent the release time of the patch in milliseconds|
+|`upload_timestamp` |`int`|UNIX timestamp representing when Riot uploaded the version to their CDN|
+|`release_timestamp`|`int`|UNIX timestamp representing when the version became available to players (`0` if data unavailable)|
 
 #### Game version
 |**Attribute**|Type |**Description**|
