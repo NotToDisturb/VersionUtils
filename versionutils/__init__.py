@@ -50,7 +50,7 @@ def get_va_versions() -> list:
     return json.loads(versions)
 
 
-def get_valorant_live():
+def get_live_configs() -> dict:
     request = Request(RIOT_URL)
     request.add_header("User-Agent", UserAgent().random)
     response = urlopen(request)
@@ -89,17 +89,17 @@ def get_versions() -> list:
     return sorted(va_versions, key=lambda v: v["release_timestamp"], reverse=True)
 
 
-def get_manifests(version: str, branch: str = "") -> list:
-    return [version_data["manifest"] for version_data in get_versions()
-            if version in version_data["version"] and branch in version_data["branch"]]
-
-
 def get_latest_version() -> dict:
     return __process_version(get_wob_versions()[-1])
 
 
+def get_manifests(version: str = "", branch: str = "") -> list:
+    return [version_data["manifest"] for version_data in get_versions()
+            if version in version_data["version"] and branch in version_data["branch"]]
+
+
 def get_latest_manifest() -> str:
-    live_configs = get_valorant_live()
+    live_configs = get_live_configs()
     for config in live_configs["platforms"]["win"]["configurations"]:
         if config["id"] == "na":
             return config["patch_url"]
@@ -120,6 +120,12 @@ def get_game_version(game_path: str) -> dict:
         }
 
 
+def get_ue_version(game_version: str):
+    for check_version, ue_version in UE_VERSIONS.items():
+        if is_version_newer(game_version, check_version):
+            return ue_version
+
+
 def is_version_newer(version_a: str, version_b: str):
     split_version_a = version_a.split(".")
     split_version_b = version_b.split(".")
@@ -129,12 +135,6 @@ def is_version_newer(version_a: str, version_b: str):
         if int(split_version_a[i]) < int(split_version_b[i]):
             return False
     return len(split_version_a) >= len(split_version_b)
-
-
-def get_ue_version(game_version: str):
-    for check_version, ue_version in UE_VERSIONS.items():
-        if is_version_newer(game_version, check_version):
-            return ue_version
 
 
 def __check_manifests():
