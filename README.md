@@ -13,6 +13,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 - [`get_va_versions`](#get_va_versions---list)
 - [`get_live_configs`](#get_live_configs---dict)
 - [`get_processed_wob_versions`](#get_processed_wob_versions---list)
+- [`get_versions`](#get_versions---list)
 - [`get_latest_version`](#get_latest_version---dict)
 - [`get_manifests`](#get_manifestsversion-str---branch-str-----list)
 - [`get_latest_manifest`](#get_latest_manifest---str)
