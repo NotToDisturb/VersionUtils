@@ -1,6 +1,6 @@
 /.idea/
+/venv/
 /VersionUtils.egg-info/
-/dist/
-*.iml
 /standalone/build/
 /standalone/out/
+*.iml

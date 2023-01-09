@@ -116,9 +116,9 @@ def is_version_newer(version_a: str, version_b: str):
     return len(split_version_a) >= len(split_version_b)
 
 
-def get_ue_version(version: str):
+def get_ue_version(game_version: str):
     for check_version, ue_version in UE_VERSIONS.items():
-        if is_version_newer(version, check_version):
+        if is_version_newer(game_version, check_version):
             return ue_version
 
 
