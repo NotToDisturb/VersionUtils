@@ -120,7 +120,7 @@ def get_latest_manifest() -> str:
     return get_latest_version()["manifest"]
 
 
-def extract_manifest_id(manifest_url: str):
+def extract_manifest_id(manifest_url: str) -> str:
     return manifest_url.split(".manifest")[0].split("/")[-1]
 
 

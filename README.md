@@ -17,6 +17,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 - [`get_latest_version`](#get_latest_version---dict)
 - [`get_manifests`](#get_manifestsversion-str---branch-str-----list)
 - [`get_latest_manifest`](#get_latest_manifest---str)
+- [`extract_manifest_id`](#extract_manifest_idmanifest_url-str---str)
 - [`get_game_version`](#get_game_versiongame_path-str---str)
 - [`get_ue_version`](#get_ue_versiongame_version-str---str)
 - [`is_version_newer`](#is_version_newerversion_a-str-version_b-str---bool)
@@ -70,7 +71,13 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 
 > ##### `get_latest_manifest() -> str`
 >
-> Returns a `str` containing the url to the latest manifest.
+> Returns a `str` containing the URL to the latest manifest.
+
+<br>
+
+> ##### `extract_manifest_id(manifest_url: str) -> str`
+> 
+> Returns a `str` containing the manifest stripped from the URL
 
 <br>
 
