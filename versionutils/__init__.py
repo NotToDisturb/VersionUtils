@@ -2,7 +2,6 @@ import json
 import time
 import schedule
 
-from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 from fake_useragent import UserAgent
 
@@ -11,7 +10,7 @@ CURRENT_MANIFEST = ""
 LAST_MANIFEST = ""
 
 WOB_URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json"
-KA_URL = "http://51.178.18.16:8000/api/v1/manifests"
+VA_URL = "https://raw.githubusercontent.com/NotToDisturb/VersionArchive/master/out/manifests.json"
 RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespace=keystone.products.valorant.patchlines"
 
 # Key is the version in which the Unreal Engine version started to be used
@@ -39,16 +38,16 @@ UE_VERSIONS = {
 }
 
 
-def get_versions() -> list:
+def get_wob_versions() -> list:
     response = urlopen(WOB_URL)
     versions_raw = response.read().decode("utf-8")
     return json.loads(versions_raw)
 
 
-def get_manifests(version: str = ""):
-    response = urlopen(KA_URL + ("" if version == "" else "?version=" + version))
-    manifests = response.read().decode("utf-8")
-    return json.loads(manifests)
+def get_va_versions() -> list:
+    response = urlopen(VA_URL)
+    versions = response.read().decode("utf-8")
+    return json.loads(versions)
 
 
 def get_valorant_live():
@@ -68,18 +67,35 @@ def __process_version(version: dict) -> dict:
         "manifest": version["id"],
         "branch": __clean_version_branch(version["build_info"]["branch"]),
         "version": version["build_info"]["version"],
+        "date": version["build_info"]["build_date"],
         "release_timestamp": version["release_timestamp"]
     }
 
 
-def get_processed_versions() -> list:
-    versions = get_versions()
-    extracted_versions = [__process_version(version) for version in versions]
-    return sorted(extracted_versions, key=lambda v: v["release_timestamp"], reverse=True)
+def get_processed_wob_versions() -> list:
+    versions = get_wob_versions()
+    processed_versions = [__process_version(version) for version in versions]
+    return sorted(processed_versions, key=lambda v: v["release_timestamp"], reverse=True)
+
+
+def get_versions() -> list:
+    va_versions = get_va_versions()
+    wob_versions = get_processed_wob_versions()
+    for wob_version in wob_versions:
+        # Found the latest version in VersionArchive, stop searching for missing versions
+        if wob_version["manifest"] == va_versions[0]["manifest"]:
+            break
+        va_versions.append(wob_version)
+    return sorted(va_versions, key=lambda v: v["release_timestamp"], reverse=True)
+
+
+def get_manifests(version: str, branch: str = "") -> list:
+    return [version_data["manifest"] for version_data in get_versions()
+            if version in version_data["version"] and branch in version_data["branch"]]
 
 
 def get_latest_version() -> dict:
-    return __process_version(get_versions()[-1])
+    return __process_version(get_wob_versions()[-1])
 
 
 def get_latest_manifest() -> str:
@@ -90,7 +106,6 @@ def get_latest_manifest() -> str:
 
 
 def get_game_version(game_path: str) -> dict:
-    # Get the version of the game from which the Locres is being extracted
     # Read the executable as bytes
     with open(game_path, 'rb') as game_file:
         # Find the sequence of bytes and extract relevant part
@@ -125,7 +140,7 @@ def get_ue_version(game_version: str):
 def __check_manifests():
     global CURRENT_VERSION, CURRENT_MANIFEST, LAST_MANIFEST
 
-    versions = get_processed_versions()
+    versions = get_processed_wob_versions()
     check_manifest = versions[0]["manifest"]
     if check_manifest != CURRENT_MANIFEST:
         LAST_MANIFEST = CURRENT_MANIFEST
@@ -138,7 +153,7 @@ def __check_manifests():
 
 
 def __start_manifest_check():
-    print("\n[INFO] New manifest checker started")
+    print("\n==== MANIFEST CHECKER ====")
     schedule.every(5).seconds.do(__check_manifests)
     __check_manifests()
 
@@ -155,23 +170,25 @@ def __start_manifest_check():
 
 def __start_manifest_query():
     do_query = True
+    print("\n==== MANIFEST QUERY ====")
     while do_query:
-        select_manifest = input("\n[INPUT] Select a version to query manifests for: ")
-        while select_manifest == "":
-            select_manifest = input("[INPUT] No version selected, select one to query manifests: ")
-        try:
-            manifests = get_manifests(select_manifest)
-            print(f"[INFO]  {len(manifests)} manifest{'' if len(manifests) == 1 else 's'} found: "
-                  f"'" + "', '".join(manifests) + "'")
-        except HTTPError:
-            print(f"[INFO]  No manifests found for version '{select_manifest}'")
+        select_version = input("\n[INPUT] Select a version: ")
+        while select_version == "":
+            select_version = input("[INPUT] No version selected: ")
+
+        valid_branches = ["", "pbe", "release"]
+        select_branch = input("[INPUT] Select a branch: ")
+        while select_branch not in valid_branches:
+            select_branch = input("[INPUT] Invalid branch: ")
+
+        manifests = get_manifests(select_version, select_branch)
+        print(f"[INFO]  {len(manifests)} manifest{'' if len(manifests) == 1 else 's'} found: "
+              f"'" + "', '".join(manifests) + "'")
         should_query = input("[INPUT] Do another query? (y/n) ")
         do_query = should_query.lower() == "y"
 
 
 def __main():
-    print(get_latest_manifest())
-
     valid_selections = ["1", "2"]
     selection_to_function = {
         "1": __start_manifest_check,
