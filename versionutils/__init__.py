@@ -1,4 +1,5 @@
 import json
+import os
 import time
 import schedule
 
@@ -121,7 +122,7 @@ def get_latest_manifest() -> str:
 
 
 def extract_manifest_id(manifest_url: str) -> str:
-    return manifest_url.split(".manifest")[0].split("/")[-1]
+    return os.path.basename(manifest_url.split(".manifest")[0])
 
 
 def get_game_version(game_path: str) -> dict:
@@ -204,6 +205,7 @@ def __start_manifest_query():
 
 
 def __main():
+
     valid_selections = ["1", "2"]
     selection_to_function = {
         "1": __start_manifest_check,
