@@ -77,7 +77,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 
 > ##### `extract_manifest_id(manifest_url: str) -> str`
 > 
-> Returns a `str` containing the manifest stripped from the URL
+> Returns a `str` containing the hexadecimal string that represents the manifest
 
 <br>
 
@@ -150,7 +150,7 @@ GAME_PATH = "C:\\Riot Games\\VALORANT\\live\\ShooterGame\\Binaries\\Win64\\VALOR
 
 print(get_latest_version()["client_version"])
 print(get_manifests("5.12", "pbe"))
-print(get_game_version())
+print(get_game_version(GAME_PATH))
 ```
 *Note: Replace `GAME_PATH` with the folder you installed VALORANT to*
 
