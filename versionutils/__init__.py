@@ -62,6 +62,10 @@ def __clean_version_branch(branch: str):
     return branch if branch == "pbe" else branch.split("-")[0]
 
 
+def __clean_version(branch: str, release_version, pbe_version):
+    return pbe_version if branch == "pbe" else release_version.split("-")[1]
+
+
 def __process_version(version: dict) -> dict:
     return {
         "manifest": version["id"],
@@ -133,9 +137,10 @@ def get_game_version(game_path: str) -> dict:
         # Transform bytes into a readable list of strings
         client_ver_list = list(filter(None, bytes.fromhex(client_ver_hex).decode('utf-16-le').split('\x00')))
         # Compose the version string
+        branch = __clean_version_branch(client_ver_list[0])
         return {
-            "branch": __clean_version_branch(client_ver_list[0]),
-            "version": client_ver_list[3],
+            "branch": branch,
+            "version": __clean_version(branch, client_ver_list[0], client_ver_list[3]),
             "date": client_ver_list[1]
         }
 
@@ -205,7 +210,6 @@ def __start_manifest_query():
 
 
 def __main():
-
     valid_selections = ["1", "2"]
     selection_to_function = {
         "1": __start_manifest_check,
