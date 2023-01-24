@@ -90,6 +90,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 > ##### `get_ue_version(game_version: str) -> str`
 >
 > Returns a `dict` containing data about the Unreal Engine version used in that version. See the [UE version structure](#unreal-engine-version).
+> Take with a grain of salt.
 
 <br>
 
@@ -137,7 +138,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 |**Attribute**  |Type |**Description**|
 |---------------|-----|---------------|
 |`unreal_engine`|`str`|An Unreal Engine version|
-|`umodel`       |`str`|The `game` argument to use when opening this version in UModel|
+|`umodel`       |`str`|The `game` argument to use when opening this version in UModel, assuming usage of [floxay's version](https://github.com/floxay/UEViewer/).|
 
 <br>
 
@@ -165,7 +166,7 @@ It is also possible to use VersionUtils as a standalone script:
 
 Once executed, you will be faced with two options
 > `Check for new manifests`<br>
->Polls WOB's data every 5 seconds and notifies whether or not a new manifest is available
+>Polls WOB's data every 10 seconds and notifies whether or not a new manifest is available
 
 <br>
 

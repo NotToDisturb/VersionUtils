@@ -15,6 +15,10 @@ RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespac
 
 # Key is the version in which the Unreal Engine version started to be used
 UE_VERSIONS = {
+    "6.01": {
+        "unreal_engine": "4.26",
+        "umodel": "valorant" #Mesh change in this update
+    },
     "5.03": {
         "unreal_engine": "4.26",
         "umodel": "valorant"
@@ -111,10 +115,18 @@ def get_manifests(version: str = "", branch: str = "") -> list:
             if version in version_data["version"] and branch in version_data["branch"]]
 
 
+def __get_release_manifest():
+    live_configs = get_live_configs()
+    for config in live_configs["platforms"]["win"]["configurations"]:
+        if config["id"] == "na":
+            return config["patch_url"]
+
+
 def get_latest_manifest() -> str:
     """
     While this implementation does get the latest `live` manifest,
-    it does not account for PBE manifests, so fallback on WOB data.
+    it does not account for PBE manifests, so fallback on
+    combination of this and WOB data.
 
     TODO: Get PBE data (need a PBE account for that lmao)
 
@@ -122,7 +134,12 @@ def get_latest_manifest() -> str:
     for config in live_configs["platforms"]["win"]["configurations"]:
         if config["id"] == "na":
             return config["patch_url"]"""
-    return get_latest_version()["manifest"]
+    release_latest = extract_manifest_id(__get_release_manifest())
+    wob_versions = get_processed_wob_versions()
+    for wob_version in wob_versions[-2:]:
+        if release_latest == wob_version["manifest"]:
+            return wob_versions[-1]
+    return release_latest
 
 
 def extract_manifest_id(manifest_url: str) -> str:
@@ -178,7 +195,7 @@ def __check_manifests():
 def __start_manifest_check():
     global CURRENT_MANIFEST, LAST_MANIFEST
     print("\n==== MANIFEST CHECKER ====")
-    schedule.every(5).seconds.do(__check_manifests)
+    schedule.every(10).seconds.do(__check_manifests)
     __check_manifests()
 
     found_new = False
