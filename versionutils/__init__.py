@@ -67,7 +67,7 @@ def __clean_version_branch(branch: str):
 
 
 def __clean_version(branch: str, release_version, pbe_version):
-    return pbe_version if branch == "pbe" else release_version.split("-")[1]
+    return pbe_version if branch == "pbe" else release_version
 
 
 def __process_version(version: dict) -> dict:
@@ -157,7 +157,7 @@ def get_game_version(game_path: str) -> dict:
         branch = __clean_version_branch(client_ver_list[0])
         return {
             "branch": branch,
-            "version": __clean_version(branch, client_ver_list[0], client_ver_list[3]),
+            "version": __clean_version(branch, client_ver_list[2], client_ver_list[3]),
             "date": client_ver_list[1]
         }
 
