@@ -17,15 +17,23 @@ RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespac
 UE_VERSIONS = {
     "6.01": {
         "unreal_engine": "4.26",
-        "umodel": "valorant" #Mesh change in this update
+        "umodel": "valorant-ue4.26-6.01+"
     },
     "5.03": {
         "unreal_engine": "4.26",
-        "umodel": "valorant"
+        "umodel": "valorant-ue4.26"
+    },
+    "4.04": {
+        "unreal_engine": "4.25",
+        "umodel": "valorant-ue4.25-4.04+"
     },
     "2.11": {
         "unreal_engine": "4.25",
-        "umodel": "ue4.25"
+        "umodel": "valorant-ue4.25"
+    },
+    "2.02": {
+        "unreal_engine": "4.24",
+        "umodel": "valorant-ue4.24-2.02+"
     },
     "2.0": {
         "unreal_engine": "4.24",

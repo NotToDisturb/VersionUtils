@@ -89,8 +89,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 
 > ##### `get_ue_version(game_version: str) -> str`
 >
-> Returns a `dict` containing data about the Unreal Engine version used in that version. See the [UE version structure](#unreal-engine-version).
-> Take with a grain of salt.
+> Returns a `dict` containing data about the Unreal Engine and UModel (from [this fork](https://github.com/NotToDisturb/UEViewer/raw/main/umodel.exe)) versions used in that version. See the [UE version structure](#unreal-engine-version).
 
 <br>
 
@@ -138,7 +137,7 @@ or from [VersionArchive](https://github.com/NotToDisturb/VersionArchive/).
 |**Attribute**  |Type |**Description**|
 |---------------|-----|---------------|
 |`unreal_engine`|`str`|An Unreal Engine version|
-|`umodel`       |`str`|The `game` argument to use when opening this version in UModel, assuming usage of [floxay's version](https://github.com/floxay/UEViewer/).|
+|`umodel`       |`str`|The `game` argument to use when opening this version in UModel, assuming usage of [this fork](https://github.com/NotToDisturb/UEViewer/raw/main/umodel.exe).|
 
 <br>
 
