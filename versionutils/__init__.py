@@ -15,6 +15,11 @@ RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespac
 
 # Key is the version in which the Unreal Engine version started to be used
 UE_VERSIONS = {
+    "6.11": {
+        "unreal_engine": "4.27",
+        "umodel": "valorant-ue4.27",
+        "fmodel": "GAME_Valorant_6_11"
+    },
     "6.01": {
         "unreal_engine": "4.26",
         "umodel": "valorant-ue4.26-6.01+",
