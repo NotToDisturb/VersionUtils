@@ -12,55 +12,10 @@ LAST_MANIFEST = ""
 WOB_URL = "https://raw.githubusercontent.com/WhiteOwlBot/WhiteOwl-public-data/main/manifests.json"
 VA_URL = "https://raw.githubusercontent.com/NotToDisturb/VersionArchive/master/out/manifests.json"
 RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespace=keystone.products.valorant.patchlines"
+VERSIONS_PATH = os.path.dirname(__file__) + "\\ue_versions.json"
 
 # Key is the version in which the Unreal Engine version started to be used
-UE_VERSIONS = {
-    "6.11": {
-        "unreal_engine": "4.27",
-        "umodel": "valorant-ue4.27",
-        "fmodel": "GAME_Valorant_6_11"
-    },
-    "6.01": {
-        "unreal_engine": "4.26",
-        "umodel": "valorant-ue4.26-6.01+",
-        "fmodel": "GAME_Valorant_6_01"
-    },
-    "5.03": {
-        "unreal_engine": "4.26",
-        "umodel": "valorant-ue4.26",
-        "fmodel": "GAME_Valorant_UE4_26"
-    },
-    "4.04": {
-        "unreal_engine": "4.25",
-        "umodel": "valorant-ue4.25-4.04+",
-        "fmodel": "GAME_Valorant_4_04"
-    },
-    "2.11": {
-        "unreal_engine": "4.25",
-        "umodel": "valorant-ue4.25",
-        "fmodel": "GAME_Valorant_UE4_25"
-    },
-    "2.02": {
-        "unreal_engine": "4.24",
-        "umodel": "valorant-ue4.24-2.02+",
-        "fmodel": "GAME_Valorant_2_02"
-    },
-    "2.0": {
-        "unreal_engine": "4.24",
-        "umodel": "ue4.24",
-        "fmodel": "GAME_UE4_24"
-    },
-    "0.49": {
-        "unreal_engine": "4.23",
-        "umodel": "ue4.23",
-        "fmodel": "GAME_UE4_23"
-    },
-    "0": {
-        "unreal_engine": "4.22",
-        "umodel": "ue4.22",
-        "fmodel": "GAME_UE4_22"
-    },
-}
+UE_VERSIONS = json.load(open(VERSIONS_PATH, "rt"))
 
 
 def get_wob_versions() -> list:
