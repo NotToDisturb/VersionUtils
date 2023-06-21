@@ -15,7 +15,7 @@ RIOT_URL = "https://clientconfig.rpg.riotgames.com/api/v1/config/public?namespac
 VERSIONS_PATH = os.path.dirname(__file__) + "\\ue_versions.json"
 
 # Key is the version in which the Unreal Engine version started to be used
-UE_VERSIONS = json.load(open(VERSIONS_PATH, "rt"))
+UE_VERSIONS = json.load(open(VERSIONS_PATH, "rt"))["data"]
 
 
 def get_wob_versions() -> list:
