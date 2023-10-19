@@ -42,8 +42,8 @@ def __clean_version_branch(branch: str):
     return branch if branch == "pbe" else branch.split("-")[0]
 
 
-def __clean_version(branch: str, release_version, pbe_version):
-    return pbe_version if branch == "pbe" else release_version
+def __clean_version(branch: str, version_1, version_2):
+    return version_2 if branch == "pbe" or not branch.split("-")[1] else version_1
 
 
 def __process_version(version: dict) -> dict:
@@ -131,9 +131,12 @@ def get_game_version(game_path: str) -> dict:
         client_ver_list = list(filter(None, bytes.fromhex(client_ver_hex).decode('utf-16-le').split('\x00')))
         # Compose the version string
         branch = __clean_version_branch(client_ver_list[0])
+        version = client_ver_list[2] if len(client_ver_list) < 4 else \
+            __clean_version(client_ver_list[0], client_ver_list[2], client_ver_list[3])
+        print(client_ver_list)
         return {
             "branch": branch,
-            "version": __clean_version(branch, client_ver_list[2], client_ver_list[3]),
+            "version": version,
             "date": client_ver_list[1]
         }
 
@@ -202,18 +205,26 @@ def __start_manifest_query():
         do_query = should_query.lower() == "y"
 
 
+def __start_get_game_version():
+    print("\n==== GET GAME VERSION ====")
+    game_path = input("\n[INPUT] Enter the path of a 'VALORANT-Win64-Shipping.exe' file: ")
+    print("[INFO] The game version of the selected executable is: "
+          f"    {get_game_version(game_path)}")
+
+
 def __main():
-    valid_selections = ["1", "2"]
     selection_to_function = {
         "1": __start_manifest_check,
-        "2": __start_manifest_query
+        "2": __start_manifest_query,
+        "3": __start_get_game_version
     }
 
     print("[INPUT] Started VersionUtils")
     print("        1. Check for new manifest")
     print("        2. Query manifests for specific game version")
+    print("        3. Get game version")
     select = input("        Select an option: ")
-    while select not in valid_selections:
+    while select not in selection_to_function.keys():
         select = input("        Invalid input, select an option: ")
     selection_to_function[select]()
 
